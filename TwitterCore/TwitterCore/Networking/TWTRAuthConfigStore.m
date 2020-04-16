@@ -40,7 +40,16 @@
 
 - (void)saveAuthConfig:(TWTRAuthConfig *)authConfig
 {
-    NSData *secret = [NSKeyedArchiver archivedDataWithRootObject:authConfig];
+    NSData *secret;
+    if (@available(iOS 11.0, *)) {
+        NSError *error;
+        secret = [NSKeyedArchiver archivedDataWithRootObject:authConfig requiringSecureCoding:YES error:&error];
+        if (error) {
+            NSLog(@"Unable to archive auth config: %@", error);
+        }
+    } else {
+        secret = [NSKeyedArchiver archivedDataWithRootObject:authConfig];
+    }
     TWTRGenericKeychainItem *item = [[TWTRGenericKeychainItem alloc] initWithService:[self nameSpacedServiceKey] account:[self nameSpacedAccountKey] secret:secret];
     [self persistAuthConfig:authConfig withKeychainItem:item];
 }
@@ -57,7 +66,16 @@
 
     TWTRGenericKeychainItem *item = [items firstObject];
     if (item) {
-        return [NSKeyedUnarchiver unarchiveObjectWithData:item.secret];
+        if (@available(iOS 11.0, *)) {
+            NSError *unarchiveError;
+            TWTRAuthConfig *config = [NSKeyedUnarchiver unarchiveTopLevelObjectWithData:item.secret error:&unarchiveError];
+            if (unarchiveError) {
+                NSLog(@"Unable to unarchive saved auth config: %@", unarchiveError);
+            }
+            return config;
+        } else {
+            return [NSKeyedUnarchiver unarchiveObjectWithData:item.secret];
+        }
     } else {
         return nil;
     }

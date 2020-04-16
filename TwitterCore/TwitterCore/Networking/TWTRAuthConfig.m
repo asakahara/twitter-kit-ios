@@ -17,7 +17,7 @@
 
 #import "TWTRAuthConfig.h"
 
-@interface TWTRAuthConfig () <NSCoding>
+@interface TWTRAuthConfig () <NSSecureCoding>
 
 @property (nonatomic, copy, readwrite) NSString *consumerKey;
 @property (nonatomic, copy, readwrite) NSString *consumerSecret;
@@ -67,6 +67,11 @@
 - (NSUInteger)hash
 {
     return [self.consumerKey hash];
+}
+
++ (BOOL)supportsSecureCoding
+{
+    return YES;
 }
 
 @end
