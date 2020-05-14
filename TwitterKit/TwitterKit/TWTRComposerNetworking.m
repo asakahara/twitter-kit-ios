@@ -91,7 +91,8 @@
         }
 
         // Next attempted send should not use previous video data
-        [weakSelf cancelPendingVideoUpload];
+        // Commnet out the below line to block uploading image files instead of video files.
+        //[weakSelf cancelPendingVideoUpload];
 
         // For TWTRSETweetShareViewControllerDelegate
         TWTRSENetworkingResult networkResult = success ? TWTRSENetworkingResultSuccess : TWTRSENetworkingResultError;
