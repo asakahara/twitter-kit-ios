@@ -265,8 +265,8 @@ static id<TWTRSessionStore_Private> TWTRSharedSessionStore = nil;
 }
 - (void)sendTweetWithText:(NSString *)tweetText videoData:(NSData *)videoData completion:(TWTRSendTweetCompletion)completion
 {
-    // Keep the limit to be 5M to qualify for image/media upload, not using separate chunk upload
-    const long long kVideoMaxFileSize = 5 * 1024 * 1024;
+    // Keep the limit to be 5M to qualify for video/media upload, not using separate chunk upload
+    const long long kVideoMaxFileSize = 15 * 1024 * 1024;
 
     if (videoData == nil) {
         NSLog(@"Error: video data is empty");
@@ -279,7 +279,7 @@ static id<TWTRSessionStore_Private> TWTRSharedSessionStore = nil;
         return;
     } else if (videoData.length > kVideoMaxFileSize) {
         NSLog(@"Error: video data is too big");
-        NSError *sizeError = [NSError errorWithDomain:TWTRErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey: @"Error: video data is bigger than 5 MB"}];
+        NSError *sizeError = [NSError errorWithDomain:TWTRErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey: @"Error: video data is bigger than 15 MB"}];
         completion(nil, sizeError);
         return;
     }
